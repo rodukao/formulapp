@@ -5,6 +5,9 @@ import sqlite3
 # Email validator
 from email_validator import validate_email, EmailNotValidError
 
+# Criptografia de senha
+import bcrypt
+
 # CRIA TABELA SE NÃO EXISTIR
 def cria_tabela_usuarios():
     try:
@@ -29,12 +32,16 @@ def cria_tabela_usuarios():
 def insere_usuario(nome, senha, email):
     # checa se campos estão todos preenchidos
     if valida_campos(nome, senha, email):
+        
+        # Criptografa a senha antes de inseri-la no banco
+        senha_criptografada = bcrypt.hashpw(senha.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+        
         try:
             with sqlite3.connect('banco.db') as conn:
                 cursor = conn.cursor()
             
                 # executa query e informa resultado
-                cursor.execute('INSERT INTO usuarios_site(nome, senha, email) VALUES (?, ?, ?)', (nome, senha, email))
+                cursor.execute('INSERT INTO usuarios_site(nome, senha, email) VALUES (?, ?, ?)', (nome, senha_criptografada, email))
                 conn.commit()  
                 print(f"Usuário {nome} inserido com sucesso.")
 
@@ -55,9 +62,10 @@ def valida_campos(nome, senha, email):
             emailinfo = validate_email(email, check_deliverability=False)
             email = emailinfo.normalized
             return True
+        
         except EmailNotValidError as e:
             print(str(e))
-            return False  
+            return False
 
 
 # LISTA USUÁRIOS
@@ -78,7 +86,5 @@ def lista_usuarios():
 
 # CHAMA FUNÇÕES
 cria_tabela_usuarios()
-
 insere_usuario("Rodrigo", "123456", "rodukao@gmail.com")
-
 lista_usuarios()
