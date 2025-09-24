@@ -1,2 +1,4 @@
 banco.db
+.env
+
 venv/

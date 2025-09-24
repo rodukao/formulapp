@@ -1,90 +1,35 @@
 # IMPORTS
+from flask import Flask, render_template, request, redirect, url_for
+import os
+from dotenv import load_dotenv
+
 # Banco de dados sqlite
-import sqlite3
+from database import cria_tabela_usuarios, insere_usuario, lista_usuarios
 
-# Email validator
-from email_validator import validate_email, EmailNotValidError
-
-# Criptografia de senha
-import bcrypt
-
-# CRIA TABELA SE NÃO EXISTIR
-def cria_tabela_usuarios():
-    try:
-        with sqlite3.connect('banco.db') as conn:
-            cursor = conn.cursor()
-
-            # Criando tabela
-            # as 3 aspas são para criar strings de múltiplas linhas facilitando a leitura
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS usuarios_site(
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nome TEXT NOT NULL,
-                    senha TEXT NOT NULL,
-                    email TEXT NOT NULL UNIQUE
-                )
-            ''')
-    
-    except Exception as e:
-        print(f"Ocorreu um erro ao criar a tabela: {e}")
-
-# INSERE USUÁRIOS
-def insere_usuario(nome, senha, email):
-    # checa se campos estão todos preenchidos
-    if valida_campos(nome, senha, email):
-        
-        # Criptografa a senha antes de inseri-la no banco
-        senha_criptografada = bcrypt.hashpw(senha.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
-        
-        try:
-            with sqlite3.connect('banco.db') as conn:
-                cursor = conn.cursor()
-            
-                # executa query e informa resultado
-                cursor.execute('INSERT INTO usuarios_site(nome, senha, email) VALUES (?, ?, ?)', (nome, senha_criptografada, email))
-                conn.commit()  
-                print(f"Usuário {nome} inserido com sucesso.")
-
-        except Exception as e:
-            print(f"Ocorreu um erro ao inserir usuário: {e}")
-
-
-# VALIDA CAMPOS
-def valida_campos(nome, senha, email):
-    # Retorna False se os campos estiverem vazios
-    if not nome or not senha or not email:
-        print("Existem campos vazios.")
-        return False
-    else:
-        
-        # Valida email usando a dependência email-validator
-        try:
-            emailinfo = validate_email(email, check_deliverability=False)
-            email = emailinfo.normalized
-            return True
-        
-        except EmailNotValidError as e:
-            print(str(e))
-            return False
-
-
-# LISTA USUÁRIOS
-def lista_usuarios():
-    try:
-        with sqlite3.connect('banco.db') as conn:
-            cursor = conn.cursor()
-            
-            # executa query
-            cursor.execute('SELECT * FROM usuarios_site')
-            resultado = cursor.fetchall()
-            for linha in resultado:
-                print(linha)
-
-    except Exception as e:
-        print(f"Ocorreu um erro ao listar os usuários: {e}")
-
+app = Flask(__name__)
+load_dotenv()
+app.secret_key = os.environ.get('FLASK_SECRET_KEY')
 
 # CHAMA FUNÇÕES
 cria_tabela_usuarios()
-insere_usuario("Rodrigo", "123456", "rodukao@gmail.com")
-lista_usuarios()
+
+@app.route("/")
+def index():
+    return render_template('cadastro.html')
+
+@app.route("/cadastrar", methods=['POST'])
+def cadastrar_usuario():
+    nome = request.form['nome']
+    senha = request.form['senha']
+    email = request.form['email']
+
+    insere_usuario(nome, senha, email)
+    return redirect(url_for('listar_usuarios'))
+
+@app.route("/usuarios")
+def listar_usuarios():
+    usuarios = lista_usuarios()
+    return render_template('lista_usuarios.html', usuarios = usuarios)
+
+if __name__ == "__main__":
+    app.run(debug = True)

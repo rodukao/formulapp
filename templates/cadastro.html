@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar usuário</title>
+</head>
+<body>
+    {% for message in get_flashed_messages(with_categories=true) %}
+        <p style="color: {{ 'green' if message[0] == 'success' else 'red' }}">{{ message[1] }}</p>
+    {% endfor %}
+    <h1>Cadastro</h1>
+    <form method="POST" action="/cadastrar">
+        <input type="text" name="nome">
+        <input type="password" name="senha">
+        <input type="email" name="email">
+        <button type="submit">Cadastrar</button>
+    </form>
+    <a href="/usuarios">Ver usuários</a>
+</body>
+</html>
