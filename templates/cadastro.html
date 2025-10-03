@@ -10,7 +10,7 @@
         <p style="color: {{ 'green' if message[0] == 'success' else 'red' }}">{{ message[1] }}</p>
     {% endfor %}
     <h1>Cadastro</h1>
-    <form method="POST" action="/cadastrar">
+    <form method="POST" action="/cadastro_usuario">
         <input type="text" name="nome">
         <input type="password" name="senha">
         <input type="email" name="email">

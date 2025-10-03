@@ -15,9 +15,13 @@ cria_tabela_usuarios()
 
 @app.route("/")
 def index():
+    return render_template('index.html')
+
+@app.route("/cadastrar")
+def pagina_cadastro():
     return render_template('cadastro.html')
 
-@app.route("/cadastrar", methods=['POST'])
+@app.route("/cadastro_usuario", methods=['POST'])
 def cadastrar_usuario():
     nome = request.form['nome']
     senha = request.form['senha']
