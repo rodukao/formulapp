@@ -1,0 +1,71 @@
+    @import url('https://fonts.googleapis.com/css2?family=Alan+Sans:wght@300..900&display=swap');
+
+    *{
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    html, body{
+        height: 100%;
+    }
+
+    body{
+        background-color: #efefef;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    main{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background-color: white;
+        padding: 40px 80px;
+        border-radius: 10px;
+    }
+
+    h1{
+        margin-bottom: 40px;
+        font-family: "Alan Sans", sans-serif;
+    }
+
+    form{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        margin-bottom: 40px;
+    }
+
+    form input, form button{
+        min-width: 400px;
+        padding: 20px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #eee;
+        font-family: 'Alan Sans';
+        font-size: 1.2em;
+    }
+
+    form button{
+        background-color: #333;
+        color: white;
+        font-size: 1.4em;
+        cursor: pointer;
+    }
+
+    form input:focus{
+        outline: none;
+    }
+
+    .opcao-entrar{
+        font-family: "Alan Sans";
+        padding-bottom: 10px;
+    }
+
+    .opcao-entrar span{
+        font-weight: 600;
+    }

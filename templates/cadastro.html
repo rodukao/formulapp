@@ -4,18 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar usuário</title>
+    <link rel="stylesheet" href="{{  url_for('static', filename='estilo.css') }}">
 </head>
 <body>
     {% for message in get_flashed_messages(with_categories=true) %}
         <p style="color: {{ 'green' if message[0] == 'success' else 'red' }}">{{ message[1] }}</p>
     {% endfor %}
-    <h1>Cadastro</h1>
-    <form method="POST" action="/cadastro_usuario">
-        <input type="text" name="nome">
-        <input type="password" name="senha">
-        <input type="email" name="email">
-        <button type="submit">Cadastrar</button>
-    </form>
-    <a href="/usuarios">Ver usuários</a>
+    <main>
+        <h1>Crie sua conta</h1>
+        <form method="POST" action="/cadastro_usuario">
+            <input type="text" name="nome" placeholder="Nome">
+            <input type="password" name="senha" placeholder="Senha">
+            <input type="email" name="email" placeholder="e-mail">
+            <button type="submit">Cadastrar</button>
+        </form>
+        <p class="opcao-entrar">Já possui uma conta? <a href="/entrar"><span>Entrar</span></a></p>
+    </main>
+    
+    
+    
 </body>
 </html>
